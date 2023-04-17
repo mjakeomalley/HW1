@@ -106,6 +106,7 @@
 -- Drop existing tables, so you'll start fresh each time this script is run.
 DROP TABLE IF EXISTS movies;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS studios;
 DROP TABLE IF EXISTS actors;
 
 -- Create new tables, according to your domain model
@@ -114,13 +115,18 @@ CREATE TABLE movies (
     title TEXT,
     year_released INTEGER,
     mpaa_rating TEXT,
-    studio TEXT
+    studio_id INTEGER
 );
 
 CREATE TABLE actors (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     first_name TEXT,
     last_name TEXT
+);
+
+CREATE TABLE studios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    studio TEXT
 );
 
 CREATE TABLE roles (
@@ -136,38 +142,45 @@ INSERT INTO movies (
     title,
     year_released,
     mpaa_rating,
-    studio
+    studio_id
 )
 VALUES (
     "Batman Begins",
     "2005",
     "PG-13",
-    "Warner Bros."
+    "1"
 );
 
 INSERT INTO movies (
     title,
     year_released,
     mpaa_rating,
-    studio
+    studio_id
 )
 VALUES (
     "The Dark Knight",
     "2008",
     "PG-13",
-    "Warner Bros."
+    "1"
 );
 
 INSERT INTO movies (
     title,
     year_released,
     mpaa_rating,
-    studio
+    studio_id
 )
 VALUES (
     "The Dark Knight Rises",
     "2012",
     "PG-13",
+    "1"
+);
+
+INSERT INTO studios (
+    studio
+)
+VALUES (
     "Warner Bros."
 );
 
@@ -441,8 +454,8 @@ VALUES (
 .print ""
 
 -- The SQL statement for the movies output
-SELECT title, year_released, mpaa_rating,  studio
-FROM movies;
+SELECT movies.title, movies.year_released, movies.mpaa_rating,  studios.studio
+FROM movies INNER JOIN studios ON studios.id = movies.studio_id;
 
 -- Prints a header for the cast output
 .print ""
@@ -456,11 +469,3 @@ SELECT movies.title, actors.first_name || ' ' || actors.last_name AS Fullname, r
 FROM roles
 INNER JOIN movies ON movies.id = roles.movie_id
 INNER JOIN actors ON actors.id = roles.actor_id;
-
-.print ""
-.print "do I need to make a new model or table for "studio"? Can just select title where studio = warner bros"
-.print ""
-
-SELECT title, studio
-FROM movies
-WHERE studio = "Warner Bros.";
