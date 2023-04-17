@@ -452,7 +452,14 @@ FROM movies;
 
 
 -- The SQL statement for the cast output
+SELECT movies.title, actors.first_name || ' ' || actors.last_name AS Fullname, roles.role_name
+FROM roles
+INNER JOIN movies ON movies.id = roles.movie_id
+INNER JOIN actors ON actors.id = roles.actor_id;
 
+.print ""
+.print "do I need to make a new model or table for "studio"? Can just select title where studio = warner bros"
+.print ""
 
 SELECT title, studio
 FROM movies
